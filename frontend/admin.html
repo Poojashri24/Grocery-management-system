@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+
+<div class="dashboard">
+
+    <div class="sidebar">
+    <h2 onclick="loadAdminDashboard()" style="cursor:pointer;">
+        Admin Panel
+    </h2>
+
+    <button onclick="loadAdminDashboard()">🏠 Dashboard</button>
+    <button onclick="loadProducts()">📦 View Products</button>
+    <button onclick="showAddProductForm()">➕ Add Product</button>
+    <button onclick="showUpdateProductForm()">✏ Update Product</button>
+    <button onclick="loadOrders()">🧾 All Orders</button>
+    <button onclick="logout()">🚪 Logout</button>
+</div>
+
+    <div class="content" id="contentArea">
+    </div>
+
+</div>
+
+<script src="dashboard.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        protectRoute("ADMIN");
+        loadAdminDashboard();
+    });
+</script>
+
+</body>
+</html>

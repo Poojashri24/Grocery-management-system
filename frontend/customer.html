@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Customer Dashboard</title>
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+
+<div class="dashboard">
+
+    <div class="sidebar">
+    <h2 onclick="loadCustomerDashboard()" style="cursor:pointer;">
+        Customer Panel
+    </h2>
+
+    <button onclick="loadCustomerDashboard()">🏠 Dashboard</button>
+    <button onclick="loadProducts()">📦 View Products</button>
+    <button onclick="loadMyOrders()">🧾 My Orders</button>
+    <button onclick="showOrderForm()">🛒 Place Order</button>
+    <button onclick="logout()">🚪 Logout</button>
+</div>
+
+    <div class="content" id="contentArea">
+        <!-- Content loads dynamically -->
+    </div>
+
+</div>
+
+<script src="dashboard.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        protectRoute("CUSTOMER");
+        loadCustomerDashboard();
+    });
+</script>
+
+</body>
+</html>
