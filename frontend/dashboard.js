@@ -1,5 +1,5 @@
 const API = "http://localhost:3000/api";
-
+let cart = [];
 /* ==============================
    AUTH HELPERS
 ============================== */
@@ -100,7 +100,31 @@ async function deleteProduct(id) {
         alert(data.message);
     }
 }
+async function submitOrder() {
+
+    const res = await fetch(`${API}/orders`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getToken()}`
+        },
+        body: JSON.stringify({
+            items: cart
+        })
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+        alert("Order placed successfully!");
+        cart = [];
+        loadMyOrders();
+    } else {
+        alert(data.message);
+    }
+}
 async function loadProducts() {
+
     const res = await fetch(`${API}/products`, {
         headers: { Authorization: `Bearer ${getToken()}` }
     });
@@ -114,11 +138,20 @@ async function loadProducts() {
         html += `
             <li>
                 ${p.name} - ₹${p.price} - Stock: ${p.stock_quantity}
+
+                ${
+                    getRole() === "CUSTOMER"
+                        ? `<button onclick="addToCart('${p.name}', ${p.price})">
+                            ➕ Add
+                           </button>`
+                        : ""
+                }
+
                 ${
                     getRole() === "ADMIN"
                         ? `<button class="delete-btn"
-                                   onclick="deleteProduct(${p.id})">
-                                   🗑 Delete
+                            onclick="deleteProduct(${p.id})">
+                            🗑 Delete
                            </button>`
                         : ""
                 }
@@ -129,6 +162,79 @@ async function loadProducts() {
     html += "</ul></div>";
 
     document.getElementById("contentArea").innerHTML = html;
+}
+function addToCart(name, price) {
+
+    if (getRole() !== "CUSTOMER") return;
+
+    const existing = cart.find(item => item.product_name === name);
+
+    if (existing) {
+        existing.quantity += 1;
+    } else {
+        cart.push({
+            product_name: name,
+            price: price,
+            quantity: 1
+        });
+    }
+
+    alert(name + " added to cart");
+}
+function viewCart() {
+
+    if (cart.length === 0) {
+        document.getElementById("contentArea").innerHTML =
+            "<div class='card'><h2>Your Cart is Empty</h2></div>";
+        return;
+    }
+
+    let total = 0;
+
+    let html = "<div class='card'><h2>Your Cart 🛒</h2><ul>";
+
+    cart.forEach((item, index) => {
+        total += item.price * item.quantity;
+
+        html += `
+            <li>
+                <div>
+                    <strong>${item.product_name}</strong><br>
+                    ₹${item.price} × ${item.quantity}
+                </div>
+
+                <div>
+                    <button onclick="decreaseQty(${index})">➖</button>
+                    <button onclick="increaseQty(${index})">➕</button>
+                    <button onclick="removeFromCart(${index})">❌</button>
+                </div>
+            </li>
+        `;
+    });
+
+    html += `</ul>
+             <h3>Total: ₹${total}</h3>
+             <button onclick="submitOrder()">Submit Order</button>
+             </div>`;
+
+    document.getElementById("contentArea").innerHTML = html;
+}
+function increaseQty(index) {
+    cart[index].quantity += 1;
+    viewCart();
+}
+
+function decreaseQty(index) {
+    if (cart[index].quantity > 1) {
+        cart[index].quantity -= 1;
+    } else {
+        cart.splice(index, 1);
+    }
+    viewCart();
+}
+function removeFromCart(index) {
+    cart.splice(index, 1);
+    viewCart();
 }
 
 /* ==============================
@@ -159,43 +265,6 @@ async function loadMyOrders() {
     document.getElementById("contentArea").innerHTML = html;
 }
 
-function showOrderForm() {
-    const html = `
-        <div class="card">
-            <h2>Place Order</h2>
-            <input type="text" id="productName" placeholder="Product Name"><br><br>
-            <input type="number" id="quantity" placeholder="Quantity"><br><br>
-            <button onclick="placeOrder()">Submit</button>
-        </div>
-    `;
-
-    document.getElementById("contentArea").innerHTML = html;
-}
-
-async function placeOrder() {
-    const product_name = document.getElementById("productName").value;
-    const quantity = document.getElementById("quantity").value;
-
-    const res = await fetch(`${API}/orders`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${getToken()}`
-        },
-        body: JSON.stringify({
-            items: [{ product_name, quantity }]
-        })
-    });
-
-    const data = await res.json();
-
-    if (res.ok) {
-        alert("Order placed successfully!");
-        loadMyOrders();
-    } else {
-        alert(data.message);
-    }
-}
 
 async function cancelOrder(orderId) {
     const res = await fetch(`${API}/orders/${orderId}/cancel`, {

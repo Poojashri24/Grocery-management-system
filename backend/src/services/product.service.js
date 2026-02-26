@@ -17,14 +17,10 @@ const createProduct = async (data) => {
 };
 
 // Get All Products
-const getAllProducts = async (page = 1, limit = 5) => {
-    const offset = (page - 1) * limit;
-
+const getAllProducts = async () => {
     const result = await pool.query(
         `SELECT * FROM products
-         ORDER BY id DESC
-         LIMIT $1 OFFSET $2`,
-        [limit, offset]
+         ORDER BY id DESC`
     );
 
     return result.rows;

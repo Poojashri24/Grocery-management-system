@@ -1,92 +1,80 @@
 /* ===============================
    GLOBAL RESET
 ================================ */
-
 * {
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
 }
 
 body {
-    margin: 0;
-    font-family: 'Poppins', sans-serif;
-    min-height: 100vh;
-    color: #fff;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    background-color: #f5f7fa;
+    color: #1f2937;
 }
 
 /* ===============================
-   ANIMATED GRADIENT BACKGROUND
+   LOGIN & REGISTER PAGE
 ================================ */
-
-@keyframes gradientMove {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
-
-/* ===============================
-   LOGIN PAGE STYLING
-================================ */
-
 .login-page {
-    background: linear-gradient(135deg, #1e3c72, #2a5298);
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
+    background: #f3f4f6;
 }
 
-/* Glass Login Card */
-
 .login-card {
-    background: rgba(255, 255, 255, 0.12);
-    backdrop-filter: blur(20px);
-    padding: 50px;
-    border-radius: 25px;
+    background: #ffffff;
     width: 380px;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
     text-align: center;
-    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
-    color: white;
-    animation: fadeIn 0.6s ease;
 }
 
 .login-card h2 {
-    margin-bottom: 30px;
+    margin-bottom: 25px;
     font-weight: 600;
+    color: #111827;
 }
 
 .login-card input {
     width: 100%;
-    padding: 14px;
-    margin: 12px 0;
-    border-radius: 12px;
-    border: none;
-    outline: none;
+    padding: 12px;
+    margin-bottom: 18px;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
     font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.login-card input:focus {
+    border-color: #2563eb;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
 }
 
 .login-card button {
     width: 100%;
-    padding: 14px;
-    margin-top: 15px;
-    border-radius: 12px;
+    padding: 12px;
+    border-radius: 8px;
     border: none;
-    font-weight: bold;
-    font-size: 15px;
-    background: linear-gradient(45deg, #ff512f, #dd2476);
+    background-color: #2563eb;
     color: white;
+    font-weight: 600;
     cursor: pointer;
-    transition: 0.3s;
+    transition: 0.3s ease;
 }
 
 .login-card button:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+    background-color: #1e40af;
 }
 
 .login-card a {
-    color: #ffd369;
+    color: #2563eb;
     text-decoration: none;
-    font-weight: bold;
+    font-weight: 500;
 }
 
 .login-card a:hover {
@@ -96,101 +84,78 @@ body {
 /* ===============================
    DASHBOARD LAYOUT
 ================================ */
-
 .dashboard {
     display: flex;
     min-height: 100vh;
-    background: linear-gradient(135deg, #ff9a9e, #a18cd1);
-    background-size: 400% 400%;
-    animation: gradientMove 12s ease infinite;
 }
 
 /* ===============================
-   SIDEBAR
+   SIDEBAR (Clean & Minimal)
 ================================ */
-
 .sidebar {
-    width: 260px;
-    padding: 30px 20px;
-    background: linear-gradient(180deg, #667eea, #764ba2);
+    width: 220px;
+    background-color: #111827;
+    padding: 25px 15px;
     display: flex;
     flex-direction: column;
-    color: white;
-    box-shadow: 5px 0 25px rgba(0,0,0,0.2);
 }
 
 .sidebar h2 {
+    color: #ffffff;
+    margin-bottom: 30px;
+    font-size: 18px;
     text-align: center;
-    margin-bottom: 40px;
 }
 
 .sidebar button {
-    background: linear-gradient(45deg, #ff758c, #ff7eb3);
-    margin-bottom: 15px;
-    padding: 12px;
-    border-radius: 12px;
+    background: none;
     border: none;
-    font-weight: bold;
-    transition: all 0.3s ease;
+    color: #d1d5db;
+    padding: 10px 12px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    text-align: left;
+    cursor: pointer;
+    transition: 0.2s ease;
+    font-size: 14px;
 }
 
 .sidebar button:hover {
-    transform: scale(1.05);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    background-color: #1f2937;
+    color: #ffffff;
 }
 
 /* ===============================
    CONTENT AREA
 ================================ */
-
 .content {
     flex: 1;
     padding: 40px;
-    backdrop-filter: blur(6px);
 }
 
 /* ===============================
-   COLORFUL CARDS
+   CARD STYLE
 ================================ */
-
 .card {
+    background: #ffffff;
     padding: 25px;
-    border-radius: 20px;
-    margin-bottom: 25px;
-    background: rgba(255,255,255,0.15);
-    backdrop-filter: blur(15px);
-    color: white;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-    transition: all 0.4s ease;
-}
-
-.card:nth-child(2) {
-    background: linear-gradient(135deg, #fa709a, #fee140);
-}
-
-.card:nth-child(3) {
-    background: linear-gradient(135deg, #30cfd0, #330867);
-}
-
-.card:hover {
-    transform: translateY(-8px) scale(1.02);
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    margin-bottom: 20px;
 }
 
 /* ===============================
    LIST ITEMS
 ================================ */
-
 ul {
     list-style: none;
-    padding: 0;
 }
 
 li {
-    padding: 12px;
-    border-radius: 12px;
+    padding: 14px;
+    background: #f9fafb;
+    border-radius: 8px;
     margin-bottom: 10px;
-    background: rgba(255,255,255,0.2);
-    backdrop-filter: blur(5px);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -199,84 +164,62 @@ li {
 /* ===============================
    BUTTONS
 ================================ */
-
 button {
     padding: 8px 14px;
-    border-radius: 10px;
+    border-radius: 6px;
     border: none;
-    font-weight: bold;
     cursor: pointer;
-    transition: all 0.3s ease;
+    font-weight: 500;
 }
-
-button:hover {
-    transform: translateY(-3px);
-}
-
-/* Delete button */
 
 .delete-btn {
-    background: linear-gradient(45deg, #ff416c, #ff4b2b);
+    background-color: #ef4444;
+    color: white;
 }
 
 .delete-btn:hover {
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    background-color: #b91c1c;
 }
 
 /* ===============================
-   INPUTS
+   INPUT FIELDS INSIDE DASHBOARD
 ================================ */
-
 .content input {
-    padding: 10px;
-    border-radius: 10px;
-    border: none;
-    margin-bottom: 12px;
     width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #d1d5db;
+    margin-bottom: 15px;
+}
+
+.content input:focus {
+    border-color: #2563eb;
+    outline: none;
 }
 
 /* ===============================
    MODAL
 ================================ */
-
 .modal {
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.6);
+    background-color: rgba(0,0,0,0.4);
     justify-content: center;
     align-items: center;
 }
 
 .modal-content {
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: #ffffff;
     padding: 30px;
-    border-radius: 20px;
-    width: 320px;
+    border-radius: 10px;
+    width: 350px;
     text-align: center;
-    color: white;
-    animation: fadeIn 0.4s ease;
-}
-
-.modal-actions {
-    margin-top: 20px;
-    display: flex;
-    justify-content: space-between;
 }
 
 /* ===============================
-   ANIMATION
+   RESPONSIVE
 ================================ */
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* ===============================
-   RESPONSIVE DESIGN
-================================ */
-
 @media (max-width: 768px) {
 
     .dashboard {
@@ -287,13 +230,12 @@ button:hover {
         width: 100%;
         flex-direction: row;
         overflow-x: auto;
-        justify-content: space-around;
     }
 
     .sidebar button {
         flex: 1;
+        text-align: center;
         font-size: 12px;
-        margin: 5px;
     }
 
     .content {
