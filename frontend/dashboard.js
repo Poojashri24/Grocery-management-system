@@ -7,7 +7,6 @@ let cart = [];
 function getToken() {
     return localStorage.getItem("token");
 }
-
 function getRole() {
     return localStorage.getItem("role");
 }
@@ -45,7 +44,6 @@ async function login() {
     if (res.ok) {
         localStorage.setItem("token", data.token);
         localStorage.setItem("role", data.role);
-
         if (data.role === "ADMIN")
             window.location.href = "admin.html";
         else
@@ -125,43 +123,74 @@ async function submitOrder() {
 }
 async function loadProducts() {
 
-    const res = await fetch(`${API}/products`, {
-        headers: { Authorization: `Bearer ${getToken()}` }
-    });
+const res = await fetch(`${API}/products`,{
+headers:{Authorization:`Bearer ${getToken()}`}
+});
 
-    const products = await res.json();
+const products = await res.json();
 
-    let html = "<div class='card'><h2>Products</h2><ul>";
+let html = `
+<div class="section">
 
-    products.forEach(p => {
+<h2>Products</h2>
 
-        html += `
-            <li>
-                ${p.name} - ₹${p.price} - Stock: ${p.stock_quantity}
+<table class="data-table">
 
-                ${
-                    getRole() === "CUSTOMER"
-                        ? `<button onclick="addToCart('${p.name}', ${p.price})">
-                            ➕ Add
-                           </button>`
-                        : ""
-                }
+<thead>
+<tr>
+<th>Name</th>
+<th>Price</th>
+<th>Stock</th>
+${getRole()==="ADMIN" ? "<th>Action</th>" : "<th>Add</th>"}
+</tr>
+</thead>
 
-                ${
-                    getRole() === "ADMIN"
-                        ? `<button class="delete-btn"
-                            onclick="deleteProduct(${p.id})">
-                            🗑 Delete
-                           </button>`
-                        : ""
-                }
-            </li>
-        `;
-    });
+<tbody>
+`;
 
-    html += "</ul></div>";
+products.forEach(p=>{
 
-    document.getElementById("contentArea").innerHTML = html;
+html+=`
+<tr>
+
+<td>${p.name}</td>
+
+<td>₹${p.price}</td>
+
+<td>${p.stock_quantity}</td>
+
+${
+getRole()==="ADMIN"
+?`
+<td>
+<button class="delete-btn" onclick="deleteProduct(${p.id})">
+Delete
+</button>
+</td>
+`
+:`
+<td>
+<button class="primary-btn add-cart-btn"
+onclick="addToCart('${p.name}', ${p.price})">
+Add to Cart
+</button>
+</td>
+`
+}
+
+</tr>
+`
+
+});
+
+html+=`
+</tbody>
+</table>
+</div>
+`;
+
+document.getElementById("contentArea").innerHTML=html;
+
 }
 function addToCart(name, price) {
 
@@ -185,37 +214,59 @@ function viewCart() {
 
     if (cart.length === 0) {
         document.getElementById("contentArea").innerHTML =
-            "<div class='card'><h2>Your Cart is Empty</h2></div>";
+            "<div class='section'><h2>Your Cart is Empty 🛒</h2><p>Add products to start shopping.</p></div>";
         return;
     }
 
     let total = 0;
 
-    let html = "<div class='card'><h2>Your Cart 🛒</h2><ul>";
+    let html = `
+<div class="cart-container">
 
-    cart.forEach((item, index) => {
-        total += item.price * item.quantity;
+<h2>Your Cart 🛒</h2>
 
-        html += `
-            <li>
-                <div>
-                    <strong>${item.product_name}</strong><br>
-                    ₹${item.price} × ${item.quantity}
-                </div>
+<ul class="cart-list">
+`;
 
-                <div>
-                    <button onclick="decreaseQty(${index})">➖</button>
-                    <button onclick="increaseQty(${index})">➕</button>
-                    <button onclick="removeFromCart(${index})">❌</button>
-                </div>
-            </li>
-        `;
-    });
+cart.forEach((item, index) => {
 
-    html += `</ul>
-             <h3>Total: ₹${total}</h3>
-             <button onclick="submitOrder()">Submit Order</button>
-             </div>`;
+total += item.price * item.quantity;
+
+html += `
+<li class="cart-item">
+
+<div class="cart-info">
+<strong>${item.product_name}</strong>
+<p>₹${item.price} × ${item.quantity}</p>
+</div>
+
+<div class="cart-actions">
+
+<button class="qty-btn minus" onclick="decreaseQty(${index})">−</button>
+
+<span class="qty">${item.quantity}</span>
+
+<button class="qty-btn plus" onclick="increaseQty(${index})">+</button>
+
+<button class="remove-btn" onclick="removeFromCart(${index})">✖</button>
+
+</div>
+
+</li>
+`;
+});
+
+html += `</ul>
+
+<div class="cart-footer">
+
+<h3>Total: ₹${total}</h3>
+
+<button class="order-btn" onclick="submitOrder()">Place Order</button>
+
+</div>
+
+</div>`;
 
     document.getElementById("contentArea").innerHTML = html;
 }
@@ -255,7 +306,9 @@ async function loadMyOrders() {
             <li>
                 Order #${o.id} - ₹${o.total_amount} - ${o.status}
                 ${o.status === "PLACED"
-                    ? `<button onclick="cancelOrder(${o.id})">Cancel</button>`
+                    ? `<button class="cancel-btn" onclick="cancelOrder(${o.id})">
+Cancel Order
+</button>`
                     : ""}
             </li>
         `;
@@ -285,29 +338,77 @@ async function cancelOrder(orderId) {
 /* ==============================
    ADMIN FEATURES
 ============================== */
+async function loadOrders(){
 
-async function loadOrders() {
-    const res = await fetch(`${API}/orders`, {
-        headers: { Authorization: `Bearer ${getToken()}` }
-    });
+const res = await fetch(`${API}/orders`,{
+headers:{Authorization:`Bearer ${getToken()}`}
+});
 
-    const data = await res.json();
+const orders = await res.json();
 
-    let html = "<div class='card'><h2>All Orders</h2><ul>";
+let html=`
+<div class="section">
 
-    data.forEach(o => {
-        html += `
-            <li>
-                Order #${o.id} - ₹${o.total_amount} - ${o.status}
-                ${o.status === "PLACED"
-                    ? `<button onclick="markDelivered(${o.id})">Mark Delivered</button>`
-                    : ""}
-            </li>
-        `;
-    });
+<h2>Orders</h2>
 
-    html += "</ul></div>";
-    document.getElementById("contentArea").innerHTML = html;
+<table class="data-table">
+
+<thead>
+<tr>
+<th>Order ID</th>
+<th>Total</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody>
+`;
+
+orders.forEach(o=>{
+
+let badgeClass="";
+
+if(o.status==="DELIVERED") badgeClass="badge-delivered";
+if(o.status==="PLACED") badgeClass="badge-placed";
+if(o.status==="CANCELLED") badgeClass="badge-cancelled";
+
+html+=`
+<tr>
+
+<td>#${o.id}</td>
+
+<td>₹${o.total_amount}</td>
+
+<td>
+<span class="badge ${badgeClass}">
+${o.status}
+</span>
+</td>
+
+<td>
+
+${o.status==="PLACED"
+?`<button class="deliver-btn" onclick="markDelivered(${o.id})">
+✔ Mark Delivered
+</button>`
+:""}
+
+</td>
+
+</tr>
+`;
+
+});
+
+html+=`
+</tbody>
+</table>
+</div>
+`;
+
+document.getElementById("contentArea").innerHTML=html;
+
 }
 async function markDelivered(orderId) {
     const res = await fetch(`${API}/orders/${orderId}/status`, {
@@ -337,18 +438,27 @@ async function loadCustomerDashboard() {
     const products = await productsRes.json();
     const orders = await ordersRes.json();
 
+
     const html = `
-        <div style="display:flex; gap:20px;">
-    <div class="card" style="flex:1; text-align:center;">
-        <h2>${products.length}</h2>
-        <p>Products Available</p>
+    
+    <div class="welcome-box">
+        <h1>Hello, Customer 👋</h1>
+        <p>Welcome back to DailyCart. Explore products, manage your cart and track your orders easily.</p>
     </div>
 
-    <div class="card" style="flex:1; text-align:center;">
-        <h2>${orders.length}</h2>
-        <p>Your Orders</p>
+    <div class="customer-stats">
+
+        <div class="stat-card">
+            <h2>${products.length}</h2>
+            <p>Products Available</p>
+        </div>
+
+        <div class="stat-card">
+            <h2>${orders.length}</h2>
+            <p>Your Orders</p>
+        </div>
+
     </div>
-</div>
     `;
 
     document.getElementById("contentArea").innerHTML = html;
@@ -366,70 +476,102 @@ async function loadAdminDashboard() {
     const products = await productsRes.json();
     const orders = await ordersRes.json();
 
-    // Calculate revenue
     const revenue = orders
         .filter(o => o.status === "DELIVERED")
         .reduce((sum, o) => sum + parseFloat(o.total_amount), 0);
 
-    // Low stock products
     const lowStock = products.filter(p => p.stock_quantity < 20);
 
     const html = `
 
-        <div class="card">
-            <h2>Welcome Admin 👨‍💼</h2>
-            <p>Monitor products, manage orders and track performance.</p>
+    <div class="header">
+        <div>
+            <h1>Welcome Admin 👨‍💼</h1>
+            <p>Manage your store operations efficiently.</p>
+        </div>
+    </div>
+
+    <div class="stats">
+
+        <div class="stat-card">
+            <h2>${products.length}</h2>
+            <p>Total Products</p>
         </div>
 
-        <div style="display:flex; gap:20px; flex-wrap:wrap;">
-            <div class="card" style="flex:1; min-width:200px; text-align:center;">
-                <h2>${products.length}</h2>
-                <p>Total Products</p>
-            </div>
-
-            <div class="card" style="flex:1; min-width:200px; text-align:center;">
-                <h2>${orders.length}</h2>
-                <p>Total Orders</p>
-            </div>
-
-            <div class="card" style="flex:1; min-width:200px; text-align:center;">
-                <h2>₹${revenue.toFixed(2)}</h2>
-                <p>Total Revenue</p>
-            </div>
+        <div class="stat-card">
+            <h2>${orders.length}</h2>
+            <p>Total Orders</p>
         </div>
 
-        <div class="card">
-            <h3>⚠ Low Stock Products</h3>
-            <ul>
-                ${lowStock.length === 0 
-                    ? "<li>No low stock items</li>"
-                    : lowStock.map(p =>
-                        `<li>${p.name} - Stock: ${p.stock_quantity}</li>`
-                    ).join("")
-                }
-            </ul>
+        <div class="stat-card">
+            <h2>₹${revenue.toFixed(2)}</h2>
+            <p>Total Revenue</p>
         </div>
 
-        <div class="card">
-            <h3>Recent Orders</h3>
-            <ul>
-                ${orders.slice(0,5).map(o =>
-                    `<li>Order #${o.id} - ₹${o.total_amount} - ${o.status}</li>`
-                ).join("")}
-            </ul>
-        </div>
+    </div>
+
+    <div class="section">
+        <h3>⚠ Low Stock Products</h3>
+        <ul>
+        ${
+            lowStock.length === 0
+            ? "<li>No low stock products</li>"
+            : lowStock.map(p =>
+                `<li>${p.name} - Stock: ${p.stock_quantity}</li>`
+            ).join("")
+        }
+        </ul>
+    </div>
+
+    <div class="section">
+        <h3>Recent Orders</h3>
+        <ul>
+        ${
+            orders.slice(0,5).map(o => {
+
+                let badgeClass = "";
+
+                if(o.status === "DELIVERED") badgeClass = "badge-delivered";
+                if(o.status === "PLACED") badgeClass = "badge-placed";
+                if(o.status === "CANCELLED") badgeClass = "badge-cancelled";
+
+                return `
+                <li>
+                Order #${o.id} - ₹${o.total_amount}
+                <span class="badge ${badgeClass}">
+                ${o.status}
+                </span>
+                </li>
+                `
+            }).join("")
+        }
+        </ul>
+    </div>
     `;
 
     document.getElementById("contentArea").innerHTML = html;
 }
 function showAddProductForm() {
     const html = `
-        <div class="card">
+        <div class="form-container">
             <h2>Add Product</h2>
-            <input type="text" id="pname" placeholder="Name"><br><br>
-            <input type="number" id="pprice" placeholder="Price"><br><br>
-            <input type="number" id="pstock" placeholder="Stock"><br><br>
-            <button onclick="addProduct()">Add</button>
+
+            <div class="form-group">
+                <label>Product Name</label>
+                <input type="text" id="pname" placeholder="Enter product name">
+            </div>
+
+            <div class="form-group">
+                <label>Price</label>
+                <input type="number" id="pprice" placeholder="Enter price">
+            </div>
+
+            <div class="form-group">
+                <label>Stock</label>
+                <input type="number" id="pstock" placeholder="Enter stock quantity">
+            </div>
+
+            <button class="primary-btn" onclick="addProduct()">Add Product</button>
         </div>
     `;
 
@@ -461,15 +603,33 @@ async function addProduct() {
 }
 function showUpdateProductForm() {
     const html = `
-        <div class="card">
+        <div class="form-container">
             <h2>Update Product</h2>
-            <input type="number" id="upid" placeholder="Product ID"><br><br>
-            <input type="text" id="upname" placeholder="New Name"><br><br>
-            <input type="number" id="upprice" placeholder="New Price"><br><br>
-            <input type="number" id="upstock" placeholder="New Stock"><br><br>
-            <button onclick="updateProduct()">Update</button>
+
+            <div class="form-group">
+                <label>Product ID</label>
+                <input type="number" id="upid" placeholder="Enter product ID">
+            </div>
+
+            <div class="form-group">
+                <label>New Name</label>
+                <input type="text" id="upname" placeholder="Enter new name">
+            </div>
+
+            <div class="form-group">
+                <label>New Price</label>
+                <input type="number" id="upprice" placeholder="Enter new price">
+            </div>
+
+            <div class="form-group">
+                <label>New Stock</label>
+                <input type="number" id="upstock" placeholder="Enter new stock">
+            </div>
+
+            <button class="primary-btn" onclick="updateProduct()">Update Product</button>
         </div>
     `;
+
     document.getElementById("contentArea").innerHTML = html;
 }
 async function updateProduct() {

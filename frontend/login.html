@@ -1,25 +1,107 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Login - Grocery SaaS</title>
-    <link rel="stylesheet" href="dashboard.css">
+<title>Login - DailyCart</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+<style>
+
+body{
+margin:0;
+font-family:Poppins;
+background:#f7f9fc;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
+
+/* LOGIN CARD */
+
+.login-card{
+background:white;
+width:380px;
+padding:40px;
+border-radius:10px;
+box-shadow:0 6px 18px rgba(0,0,0,0.08);
+text-align:center;
+}
+
+.login-card h2{
+color:#2e7d32;
+margin-bottom:25px;
+}
+
+/* INPUTS */
+
+.login-card input{
+width:100%;
+padding:12px;
+margin-bottom:18px;
+border-radius:6px;
+border:1px solid #ddd;
+font-size:14px;
+}
+
+.login-card input:focus{
+outline:none;
+border-color:#2e7d32;
+}
+
+/* BUTTON */
+
+.login-card button{
+width:100%;
+padding:12px;
+border:none;
+border-radius:8px;
+background:#2e7d32;
+color:white;
+font-weight:500;
+cursor:pointer;
+font-size:15px;
+}
+
+.login-card button:hover{
+background:#256628;
+}
+
+/* LINK */
+
+.login-card a{
+color:#ff8f00;
+text-decoration:none;
+font-weight:500;
+}
+
+.login-card a:hover{
+text-decoration:underline;
+}
+
+</style>
+
 </head>
 
-<body class="login-page">
+<body>
 
 <div class="login-card">
-    <h2>Grocery Management System</h2>
 
-    <input type="email" id="email" placeholder="Enter Email">
-    <input type="password" id="password" placeholder="Enter Password">
+<h2>🛒 DailyCart</h2>
 
-    <button onclick="login()">Login</button>
+<input type="email" id="email" placeholder="Enter Email">
 
-    <p style="margin-top:20px;">
-        New user? <a href="register.html">Register here</a>
-    </p>
+<input type="password" id="password" placeholder="Enter Password">
+
+<button onclick="login()">Login</button>
+
+<p style="margin-top:18px;">
+New user? <a href="register.html">Register here</a>
+</p>
+
 </div>
 
 <script src="dashboard.js"></script>
+
 </body>
 </html>

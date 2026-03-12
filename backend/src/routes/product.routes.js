@@ -36,9 +36,4 @@ router.delete('/:id',
     authorizeRole('ADMIN'),
     productController.deleteProduct
 );
-router.delete('/:id',
-    verifyToken,
-    authorizeRole('ADMIN'),
-    productController.deleteProduct
-);
 module.exports = router;

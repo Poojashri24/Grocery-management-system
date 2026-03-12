@@ -1,37 +1,115 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Customer Dashboard</title>
-    <link rel="stylesheet" href="dashboard.css">
+<title>Customer Dashboard</title>
+
+<link rel="stylesheet" href="dashboard.css">
+
+<style>
+
+/* SIDEBAR DESIGN */
+
+.dashboard{
+display:flex;
+min-height:100vh;
+}
+
+.sidebar{
+width:240px;
+background:white;
+padding:25px;
+box-shadow:4px 0 15px rgba(0,0,0,0.05);
+display:flex;
+flex-direction:column;
+}
+
+.sidebar h2{
+color:#2e7d32;
+margin-bottom:30px;
+text-align:center;
+font-size:20px;
+}
+
+/* MENU BUTTONS */
+
+.sidebar button{
+display:flex;
+align-items:center;
+gap:10px;
+width:100%;
+padding:12px;
+margin-bottom:10px;
+border:none;
+border-radius:8px;
+background:#f4f6f8;
+cursor:pointer;
+font-size:14px;
+transition:0.25s;
+}
+
+.sidebar button:hover{
+background:#e8f5e9;
+color:#2e7d32;
+transform:translateX(3px);
+}
+
+/* LOGOUT */
+
+.sidebar button:last-child{
+background:#ffebee;
+color:#c62828;
+}
+
+.sidebar button:last-child:hover{
+background:#ffcdd2;
+}
+
+/* CONTENT */
+
+.content{
+flex:1;
+padding:40px;
+background:#f7f9fc;
+}
+
+</style>
+
 </head>
+
 <body>
 
 <div class="dashboard">
 
-    <div class="sidebar">
-    <h2 onclick="loadCustomerDashboard()" style="cursor:pointer;">
-        Customer Panel
-    </h2>
+<div class="sidebar">
 
-    <button onclick="loadCustomerDashboard()">🏠 Dashboard</button>
-    <button onclick="loadProducts()">📦 View Products</button>
-    <button onclick="viewCart()">🛒 Cart</button>
-    <button onclick="loadMyOrders()">🧾 My Orders</button>
-    <button onclick="logout()">🚪 Logout</button>
+<h2 onclick="loadCustomerDashboard()" style="cursor:pointer;">
+🛒 DailyCart
+</h2>
+
+<button onclick="loadCustomerDashboard()">🏠 Dashboard</button>
+
+<button onclick="loadProducts()">📦 Products</button>
+
+<button onclick="viewCart()">🛒 Cart</button>
+
+<button onclick="loadMyOrders()">🧾 My Orders</button>
+
+<button onclick="logout()">🚪 Logout</button>
+
 </div>
 
-    <div class="content" id="contentArea">
-        <!-- Content loads dynamically -->
-    </div>
+<div class="content" id="contentArea">
+</div>
 
 </div>
 
 <script src="dashboard.js"></script>
+
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        protectRoute("CUSTOMER");
-        loadCustomerDashboard();
-    });
+document.addEventListener("DOMContentLoaded", function () {
+    protectRoute("CUSTOMER");
+    loadCustomerDashboard();
+});
 </script>
 
 </body>

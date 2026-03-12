@@ -10,7 +10,6 @@ const createOrder = async (userId, items) => {
 
         for (let item of items) {
 
-            // 🔥 Find product by NAME instead of ID
             const productRes = await client.query(
                 'SELECT * FROM products WHERE name=$1 FOR UPDATE',
                 [item.product_name]
